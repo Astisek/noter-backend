@@ -1,3 +1,3 @@
 export interface IJwtUser {
-  id: number;
+  id: string;
 }

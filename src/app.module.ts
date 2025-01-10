@@ -4,6 +4,11 @@ import { DatabaseModule } from 'src/database/database.module';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { CryptModule } from './crypt/crypt.module';
+import { FileModule } from './file/file.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
+import { CategoryModule } from './category/category.module';
+import { NoteModule } from './note/note.module';
 
 @Module({
   imports: [
@@ -12,6 +17,13 @@ import { CryptModule } from './crypt/crypt.module';
     UserModule,
     AuthModule,
     CryptModule,
+    FileModule,
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'static'),
+      serveRoot: '/static',
+    }),
+    CategoryModule,
+    NoteModule,
   ],
 })
 export class AppModule {}

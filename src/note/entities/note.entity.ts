@@ -1,37 +1,34 @@
 import { Category } from 'src/category/entities/category.entity';
-import { Note } from 'src/note/entities/note.entity';
+import { User } from 'src/user/entities/user.entity';
 import {
   Column,
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
-  OneToMany,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
 @Entity()
-export class User {
+export class Note {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column()
-  email: string;
+  content: string;
 
   @Column()
-  password: string;
+  title: string;
 
   @Column()
-  username: string;
+  rate: number;
 
-  @Column({ nullable: true })
-  avatar_url: string;
+  @ManyToOne(() => Category, (category) => category.notes)
+  category: Category;
 
-  @OneToMany(() => Category, (category) => category.user)
-  categories: Category[];
-
-  @OneToMany(() => Note, (note) => note.user)
-  notes: Note[];
+  @ManyToOne(() => User, (user) => user.notes)
+  user: User;
 
   @CreateDateColumn()
   created_at: Date;
