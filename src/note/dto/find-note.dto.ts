@@ -1,8 +1,11 @@
-import { Equals } from 'class-validator';
+import { IsIn, IsNotEmpty } from 'class-validator';
 
 export class FindNoteDto {
   search: string;
 
-  @Equals(['date', 'name', 'rate'])
+  @IsNotEmpty()
+  categoryId: string;
+
+  @IsIn(['date', 'name', 'rate'])
   sortBy: 'date' | 'name' | 'rate';
 }

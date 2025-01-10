@@ -50,10 +50,7 @@ export class CategoryService {
     updateCategoryDto: UpdateCategoryDto,
   ) {
     const { name } = updateCategoryDto;
-    const category = await this.categoryRepository.findOneBy({
-      id,
-      user: { id: userId },
-    });
+    const category = await this.findOne(userId, id);
     if (!category) {
       throw new NotFoundException();
     }

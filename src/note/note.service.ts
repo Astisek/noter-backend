@@ -36,8 +36,8 @@ export class NoteService {
     await this.noteRepository.save(note);
   }
 
-  findAll(userId: string, categoryId: string, query: FindNoteDto) {
-    const { search, sortBy } = query;
+  findAll(userId: string, query: FindNoteDto) {
+    const { search, sortBy, categoryId } = query;
     const queryBuilder = this.noteRepository.createQueryBuilder();
 
     queryBuilder.where({
@@ -55,13 +55,13 @@ export class NoteService {
     }
     switch (sortBy) {
       case 'date':
-        queryBuilder.addOrderBy('updated_at', 'ASC');
+        queryBuilder.addOrderBy('updated_at', 'DESC');
         break;
       case 'name':
         queryBuilder.addOrderBy('title', 'ASC');
         break;
       case 'rate':
-        queryBuilder.addOrderBy('rate', 'ASC');
+        queryBuilder.addOrderBy('rate', 'DESC');
         break;
     }
 
@@ -77,11 +77,17 @@ export class NoteService {
     });
   }
 
-  update(userId: string, id: number, updateNoteDto: UpdateNoteDto) {
-    const note = this.noteRepository.find;
+  async update(userId: string, id: string, updateNoteDto: UpdateNoteDto) {
+    const { content, rate, title } = updateNoteDto;
+    const note = await this.findOne(userId, id);
+    note.content = content;
+    note.rate = rate;
+    note.title = title;
+
+    return this.noteRepository.save(note);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} note`;
+  remove(userId: string, id: string) {
+    return this.noteRepository.softRemove({ user: { id: userId }, id });
   }
 }

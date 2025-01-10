@@ -3,15 +3,19 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
   Delete,
   UseGuards,
+  Query,
+  Put,
 } from '@nestjs/common';
 import { NoteService } from './note.service';
 import { CreateNoteDto } from './dto/create-note.dto';
 import { UpdateNoteDto } from './dto/update-note.dto';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { User } from 'src/auth/decorators/user.decorator';
+import { IJwtUser } from 'src/auth/interfaces/jtwUser';
+import { FindNoteDto } from 'src/note/dto/find-note.dto';
 
 @Controller('note')
 @UseGuards(JwtAuthGuard)
@@ -19,27 +23,26 @@ export class NoteController {
   constructor(private readonly noteService: NoteService) {}
 
   @Post()
-  create(@Body() createNoteDto: CreateNoteDto) {
-    return this.noteService.create(createNoteDto);
+  create(@User() user: IJwtUser, @Body() createNoteDto: CreateNoteDto) {
+    return this.noteService.create(user.id, createNoteDto);
   }
 
   @Get()
-  findAll() {
-    return this.noteService.findAll();
+  findAll(@User() user: IJwtUser, @Query() query: FindNoteDto) {
+    return this.noteService.findAll(user.id, query);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.noteService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateNoteDto: UpdateNoteDto) {
-    return this.noteService.update(+id, updateNoteDto);
+  @Put(':id')
+  update(
+    @User() user: IJwtUser,
+    @Param('id') id: string,
+    @Body() updateNoteDto: UpdateNoteDto,
+  ) {
+    return this.noteService.update(user.id, id, updateNoteDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.noteService.remove(+id);
+  remove(@User() user: IJwtUser, @Param('id') id: string) {
+    return this.noteService.remove(user.id, id);
   }
 }
