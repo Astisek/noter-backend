@@ -3,11 +3,12 @@ import { AppModule } from './app.module';
 import { ConfigService } from '@nestjs/config';
 import { IConfig } from 'src/interfaces/config';
 import { ValidationPipe } from '@nestjs/common';
+import * as cookieParser from 'cookie-parser';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.useGlobalPipes(new ValidationPipe());
-
+  app.use(cookieParser());
   const config = app.get<ConfigService<IConfig>>(ConfigService);
   const port = config.get('PORT');
   await app.listen(port);
