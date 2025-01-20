@@ -26,6 +26,7 @@ export class UserService {
       username,
     });
     await this.usersRepository.save(user);
+    return user;
   }
 
   update(id: string, updateUserDto: UpdateUserDto) {

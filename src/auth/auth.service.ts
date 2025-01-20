@@ -1,4 +1,8 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { CreateUserDto } from 'src/auth/dto/create-user.dto';
 import { CryptService } from 'src/crypt/crypt.service';
@@ -15,9 +19,12 @@ export class AuthService {
 
   async validateUser(email: string, pass: string): Promise<any> {
     const user = await this.usersService.findOne(email);
-    const isCorrectPass = await this.cryptService.compare(pass, user?.password);
+    const isCorrectPass = await this.cryptService.compare(
+      pass,
+      user?.password || '',
+    );
     if (!isCorrectPass || !user) {
-      return new UnauthorizedException();
+      throw new UnauthorizedException();
     }
 
     return user;
@@ -32,8 +39,19 @@ export class AuthService {
   }
 
   async register(createUserDto: CreateUserDto) {
+    const existUser = await this.usersService.findOne(createUserDto.email);
+
+    if (!existUser) {
+      throw new BadRequestException('This email is already registered');
+    }
+
     const hashPass = await this.cryptService.createHash(createUserDto.password);
 
-    return this.usersService.create({ ...createUserDto, password: hashPass });
+    const user = await this.usersService.create({
+      ...createUserDto,
+      password: hashPass,
+    });
+
+    return this.login(user);
   }
 }
