@@ -32,6 +32,11 @@ export class NoteController {
     return this.noteService.findAll(user.id, query);
   }
 
+  @Get(':id')
+  findOne(@User() user: IJwtUser, @Param('id') id: string) {
+    return this.noteService.findOne(user.id, id);
+  }
+
   @Put(':id')
   update(
     @User() user: IJwtUser,

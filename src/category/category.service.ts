@@ -24,14 +24,18 @@ export class CategoryService {
 
   async findAll(userId: string, query: FindCategoryDto) {
     const { search } = query;
-    const queryBuilder = this.categoryRepository.createQueryBuilder();
+    const queryBuilder = this.categoryRepository.createQueryBuilder('category');
+    queryBuilder.loadRelationCountAndMap(
+      'category.noteCount',
+      'category.notes',
+    );
     queryBuilder.where({ user: { id: userId } });
     if (search) {
-      queryBuilder.andWhere('(LOWER(name) LIKE LOWER(:search))', {
+      queryBuilder.andWhere('(LOWER(category.name) LIKE LOWER(:search))', {
         search: `%${search}%`,
       });
     }
-
+    queryBuilder.addOrderBy('category.created_at', 'DESC');
     return queryBuilder.getMany();
   }
 

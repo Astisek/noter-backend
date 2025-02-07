@@ -33,6 +33,11 @@ export class CategoryController {
     return this.categoryService.findAll(user.id, query);
   }
 
+  @Get(':id')
+  findOne(@User() user: IJwtUser, @Param('id') id: string) {
+    return this.categoryService.findOne(user.id, id);
+  }
+
   @Put(':id')
   update(
     @Param('id') id: string,

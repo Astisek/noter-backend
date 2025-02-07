@@ -16,7 +16,7 @@ export class NoteService {
   ) {}
 
   async create(userId: string, createNoteDto: CreateNoteDto) {
-    const { categoryId, content, rate, title } = createNoteDto;
+    const { categoryId, title } = createNoteDto;
     const category = await this.categoryService.findOne(userId, categoryId);
 
     if (!category) {
@@ -25,8 +25,8 @@ export class NoteService {
 
     const note = this.noteRepository.create({
       category,
-      content,
-      rate,
+      content: '',
+      rate: null,
       title,
       user: {
         id: userId,
@@ -34,11 +34,13 @@ export class NoteService {
     });
 
     await this.noteRepository.save(note);
+    return note;
   }
 
   findAll(userId: string, query: FindNoteDto) {
     const { search, sortBy, categoryId } = query;
-    const queryBuilder = this.noteRepository.createQueryBuilder();
+    const queryBuilder = this.noteRepository.createQueryBuilder('note');
+    queryBuilder.leftJoinAndSelect('note.category', 'category');
 
     queryBuilder.where({
       user: {
@@ -48,20 +50,22 @@ export class NoteService {
         id: categoryId,
       },
     });
+
     if (search) {
-      queryBuilder.andWhere('(LOWER(name) LIKE LOWER(:search))', {
+      queryBuilder.andWhere('(LOWER(note.title) LIKE LOWER(:search))', {
         search: `%${search}%`,
       });
     }
+
     switch (sortBy) {
       case 'date':
-        queryBuilder.addOrderBy('updated_at', 'DESC');
+        queryBuilder.addOrderBy('note.updated_at', 'DESC');
         break;
       case 'name':
-        queryBuilder.addOrderBy('title', 'ASC');
+        queryBuilder.addOrderBy('note.title', 'ASC');
         break;
       case 'rate':
-        queryBuilder.addOrderBy('rate', 'DESC');
+        queryBuilder.addOrderBy('note.rate', 'DESC');
         break;
     }
 

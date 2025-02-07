@@ -21,7 +21,7 @@ export class Note {
   @Column()
   title: string;
 
-  @Column()
+  @Column({ nullable: true })
   rate: number;
 
   @ManyToOne(() => Category, (category) => category.notes)

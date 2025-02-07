@@ -10,7 +10,9 @@ import { IConfig } from 'src/interfaces/config';
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(configService: ConfigService<IConfig>) {
     super({
-      jwtFromRequest: (req: Request) => req?.cookies?.['token'],
+      jwtFromRequest: (req: Request) => {
+        return req?.cookies?.['token'];
+      },
       ignoreExpiration: false,
       secretOrKey: configService.get('JWT_SALT'),
     });
