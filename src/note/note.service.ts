@@ -84,9 +84,10 @@ export class NoteService {
   async update(userId: string, id: string, updateNoteDto: UpdateNoteDto) {
     const { content, rate, title } = updateNoteDto;
     const note = await this.findOne(userId, id);
-    note.content = content;
-    note.rate = rate;
-    note.title = title;
+
+    if (content) note.content = content;
+    if (rate) note.rate = rate;
+    if (title) note.title = title;
 
     return this.noteRepository.save(note);
   }
