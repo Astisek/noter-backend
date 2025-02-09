@@ -65,7 +65,7 @@ export class NoteService {
         queryBuilder.addOrderBy('note.title', 'ASC');
         break;
       case 'rate':
-        queryBuilder.addOrderBy('note.rate', 'DESC');
+        queryBuilder.addOrderBy('note.rate', 'DESC', 'NULLS LAST');
         break;
     }
 
@@ -85,9 +85,9 @@ export class NoteService {
     const { content, rate, title } = updateNoteDto;
     const note = await this.findOne(userId, id);
 
-    if (content) note.content = content;
-    if (rate) note.rate = rate;
-    if (title) note.title = title;
+    if (content !== undefined) note.content = content;
+    if (rate !== undefined) note.rate = rate;
+    if (title !== undefined) note.title = title;
 
     return this.noteRepository.save(note);
   }

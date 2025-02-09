@@ -15,6 +15,6 @@ export class FileService {
     const filePath = join(folder, newFillName);
     await writeFile(filePath, file.buffer);
 
-    return `/static/images/${newFillName}`;
+    return `static/images/${newFillName}`;
   }
 }
