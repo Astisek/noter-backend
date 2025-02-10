@@ -17,6 +17,8 @@ COPY . .
 # Сборка проекта
 RUN pnpm build
 
+COPY /app/.env /app/dist/.env
+
 # ---
 # Финальный образ
 FROM node:20-alpine AS runner
