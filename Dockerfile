@@ -1,39 +1,36 @@
-ARG NODE_VERSION=20.17.0
-ARG PNPM_VERSION=9.14.2
+FROM node:20-alpine AS builder
 
-FROM node:${NODE_VERSION}-alpine as base
+WORKDIR /app
 
-WORKDIR /usr/src/app
+# Устанавливаем pnpm
+RUN npm install -g pnpm@latest
 
-RUN --mount=type=cache,target=/root/.npm \
-    npm install -g pnpm@${PNPM_VERSION}
+# Копируем файлы package.json и pnpm-lock.yaml
+COPY package.json pnpm-lock.yaml ./
 
-FROM base as deps
+# Устанавливаем зависимости
+RUN pnpm install --frozen-lockfile
 
-RUN --mount=type=bind,source=package.json,target=package.json \
-    --mount=type=bind,source=pnpm-lock.yaml,target=pnpm-lock.yaml \
-    --mount=type=cache,target=/root/.local/share/pnpm/store \
-    pnpm install --prod --frozen-lockfile
-
-FROM deps as build
-
-RUN --mount=type=bind,source=package.json,target=package.json \
-    --mount=type=bind,source=pnpm-lock.yaml,target=pnpm-lock.yaml \
-    --mount=type=cache,target=/root/.local/share/pnpm/store \
-    pnpm install --frozen-lockfile
-
+# Копируем исходный код
 COPY . .
-RUN pnpm run build
 
-FROM base as final
+# Сборка проекта
+RUN pnpm build
 
-USER node
+# ---
+# Финальный образ
+FROM node:20-alpine AS runner
 
-COPY package.json .
+WORKDIR /app
 
-COPY --from=deps /usr/src/app/node_modules ./node_modules
-COPY --from=build /usr/src/app/dist ./dist
+# Устанавливаем pnpm
+RUN npm install -g pnpm@latest
 
-EXPOSE 3000
+# Копируем только необходимые файлы из builder
+COPY --from=builder /app/package.json ./
+COPY --from=builder /app/pnpm-lock.yaml ./
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/dist ./dist
 
-CMD ["node", "./dist/main.js"]
+# Запускаем приложение
+CMD ["node", "dist/main.js"]
