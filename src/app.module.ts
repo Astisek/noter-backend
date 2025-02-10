@@ -12,7 +12,9 @@ import { NoteModule } from './note/note.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
+    ConfigModule.forRoot({
+      envFilePath: '.env',
+    }),
     DatabaseModule,
     UserModule,
     AuthModule,
