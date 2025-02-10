@@ -17,7 +17,7 @@ COPY . .
 # Сборка проекта
 RUN pnpm build
 
-COPY /app/.env /app/dist/.env
+
 
 # ---
 # Финальный образ
@@ -33,6 +33,8 @@ COPY --from=builder /app/package.json ./
 COPY --from=builder /app/pnpm-lock.yaml ./
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/dist ./dist
+
+COPY .env .env
 
 # Запускаем приложение
 CMD ["node", "dist/main.js"]
