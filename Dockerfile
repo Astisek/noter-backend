@@ -1,40 +1,17 @@
-FROM node:20-alpine AS builder
+FROM node:20-alpine
 
 WORKDIR /app
 
-# Устанавливаем pnpm
 RUN npm install -g pnpm@latest
 
-# Копируем файлы package.json и pnpm-lock.yaml
 COPY package.json pnpm-lock.yaml ./
 
-# Устанавливаем зависимости
-RUN pnpm install --frozen-lockfile
+RUN pnpm install
 
-# Копируем исходный код
 COPY . .
 
-# Сборка проекта
-RUN pnpm build
+RUN npm run build
 
+EXPOSE 3001
 
-
-# ---
-# Финальный образ
-FROM node:20-alpine AS runner
-
-WORKDIR /app
-
-# Устанавливаем pnpm
-RUN npm install -g pnpm@latest
-
-# Копируем только необходимые файлы из builder
-COPY --from=builder /app/package.json ./
-COPY --from=builder /app/pnpm-lock.yaml ./
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/dist ./dist
-
-COPY .env .env
-
-# Запускаем приложение
 CMD ["node", "dist/main.js"]

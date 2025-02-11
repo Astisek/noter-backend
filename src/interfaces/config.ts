@@ -8,4 +8,5 @@ export interface IConfig {
   SALT_ROUNDS: string;
   JWT_SALT: string;
   PORT: string;
+  PREFIX: string;
 }
