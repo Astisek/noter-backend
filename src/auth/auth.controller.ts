@@ -8,6 +8,8 @@ import { LoginDto } from 'src/auth/dto/login.dto';
 export class AuthController {
   constructor(private authService: AuthService) {}
 
+  private readonly tokenMaxAge = 1000 * 60 * 60 * 24 * 30; // 30d
+
   @Post('login')
   async login(
     @Body() req: LoginDto,
@@ -15,7 +17,10 @@ export class AuthController {
   ) {
     const user = await this.authService.validateUser(req.email, req.password);
     const { access_token } = await this.authService.login(user);
-    response.cookie('token', access_token, { httpOnly: true });
+    response.cookie('token', access_token, {
+      httpOnly: true,
+      maxAge: this.tokenMaxAge,
+    });
   }
 
   @Post('register')
@@ -24,6 +29,9 @@ export class AuthController {
     @Res({ passthrough: true }) response: Response,
   ) {
     const { access_token } = await this.authService.register(createUserDto);
-    response.cookie('token', access_token, { httpOnly: true });
+    response.cookie('token', access_token, {
+      httpOnly: true,
+      maxAge: this.tokenMaxAge,
+    });
   }
 }
