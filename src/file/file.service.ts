@@ -7,7 +7,8 @@ import { v4 } from 'uuid';
 @Injectable()
 export class FileService {
   async save(file: MFile) {
-    const folder = join(__dirname, '..', '..', 'static', 'images');
+    const folder = join(__dirname, '..', '..', '..', 'static', 'images');
+
     const type = parse(file.originalname).ext;
     const newFileName = v4();
     const newFillName = `${newFileName}${type}`;

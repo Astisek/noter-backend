@@ -10,8 +10,8 @@ async function bootstrap() {
   const config = app.get<ConfigService<IConfig>>(ConfigService);
   app.useGlobalPipes(new ValidationPipe());
   app.use(cookieParser());
-  app.setGlobalPrefix(config.get('PREFIX'))
-  if (config.get('IS_DEV') === "true") {
+  app.setGlobalPrefix(config.get('PREFIX'));
+  if (config.get('IS_DEV') === 'true') {
     app.enableCors({
       origin: true,
       credentials: true,
