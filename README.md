@@ -1,6 +1,6 @@
 ##  Demo: http://150.241.89.240/
 
-# Noter front-end
+# Noter back-end
 Noter is a service for creating your own rating collection. Organize movies, games, and more into categories, rate them, and add personal reviews.
 
 **Frontend project: https://github.com/Astisek/noter-front**
@@ -10,6 +10,7 @@ Noter is a service for creating your own rating collection. Organize movies, gam
 1. Clone project
 2. Start bootstrap dev docker-compose 
 3. Fill `.env` file
+
 `IS_DEV` - true
 `PORT` - Local port
 
