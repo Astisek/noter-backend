@@ -1,9 +1,9 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { CreateUserDto } from '../auth/dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { Repository } from 'typeorm';
 import { User } from 'src/user/entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
+import { CreateUserFinalDto } from 'src/auth/dto/create-user-final.dto';
 
 @Injectable()
 export class UserService {
@@ -12,7 +12,7 @@ export class UserService {
     private usersRepository: Repository<User>,
   ) {}
 
-  async create(createUserDto: CreateUserDto) {
+  async create(createUserDto: CreateUserFinalDto) {
     const { email, password, username } = createUserDto;
 
     const existUser = await this.findOne(email);

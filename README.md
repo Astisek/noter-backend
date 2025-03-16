@@ -1,4 +1,4 @@
-##  Demo: http://150.241.89.240/
+##  Project url: https://noter-tools.ru/
 
 # Noter back-end
 Noter is a service for creating your own rating collection. Organize movies, games, and more into categories, rate them, and add personal reviews.
