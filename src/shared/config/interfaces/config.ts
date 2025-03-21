@@ -4,6 +4,7 @@ export const config = (): IConfig => ({
   isDev: process.env.IS_DEV === 'true',
   prefix: process.env.PREFIX,
   port: process.env.PORT,
+  imageDomain: process.env.IMAGE_DOMAIN,
   crypt: {
     jwtSalt: process.env.JWT_SALT,
     saltRounds: +process.env.SALT_ROUNDS,

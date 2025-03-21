@@ -16,6 +16,7 @@ declare global {
       EMAIL_PORT: string;
       RECAPTCHA_PROJECT_ID: string;
       RECAPTCHA_KEY: string;
+      IMAGE_DOMAIN: string;
     }
   }
 }

@@ -2,6 +2,7 @@ export interface IConfig {
   isDev: boolean;
   port: string;
   prefix: string;
+  imageDomain: string;
   database: {
     host: string;
     user: string;

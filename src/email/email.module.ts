@@ -8,13 +8,13 @@ import { join } from 'path';
 
 @Module({
   imports: [
+    ConfigModule,
     MailerModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService<IConfig>) => {
         const { host, password, port, username } =
           configService.get<IConfig['email']>('email');
-
         return {
           transport: {
             host,
