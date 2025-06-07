@@ -24,5 +24,6 @@ Noter is a service for creating your own rating collection. Organize movies, gam
 `JWT_SALT` - Salt for jwt token  
 `PREFIX` - Global api prefix  
 
-4. pnpm install  
-5. pnpm start:dev  
+4. Create google-cloud.json in root directory with google recaptcha config  
+5. pnpm install  
+6. pnpm start:dev  
