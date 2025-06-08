@@ -13,6 +13,7 @@ Noter is a service for creating your own rating collection. Organize movies, gam
 
 `IS_DEV` - true  
 `PORT` - Local port  
+`IMAGE_DOMAIN` - App url
 
 `DB_HOST` - Postgres domain  
 `DB_USER` - Postgres username  
@@ -23,6 +24,15 @@ Noter is a service for creating your own rating collection. Organize movies, gam
 `SALT_ROUNDS` - Salt rounds for password crypt  
 `JWT_SALT` - Salt for jwt token  
 `PREFIX` - Global api prefix  
+
+`EMAIL_HOST` - Email provider host
+`EMAIL_USERNAME` - Email username
+`EMAIL_PASSWORD` - Email password
+`EMAIL_PORT` - Email port
+
+`RECAPTCHA_PROJECT_ID` - Recaptcha project id
+`RECAPTCHA_KEY` - Recaptcha project key
+
 
 4. Create google-cloud.json in root directory with google recaptcha config  
 5. pnpm install  
