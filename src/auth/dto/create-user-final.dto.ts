@@ -10,9 +10,6 @@ export class CreateUserFinalDto {
   @Length(8)
   password: string;
 
-  @Length(6, 6)
-  code: string;
-
   @IsString()
   token: string;
 }

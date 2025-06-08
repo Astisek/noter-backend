@@ -4,7 +4,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { CreateEmailDto } from 'src/auth/dto/create-email.dto';
 import { CreateUserFinalDto } from 'src/auth/dto/create-user-final.dto';
 import { EmailCode } from 'src/auth/entities/email-code.entity';
-import { codeGenerator } from 'src/auth/utils/codeGenerator';
 import { CryptService } from 'src/crypt/crypt.service';
 import { EmailService } from 'src/email/email.service';
 import { User } from 'src/user/entities/user.entity';
@@ -45,33 +44,13 @@ export class AuthService {
 
   async registerEmail(createEmailDto: CreateEmailDto) {
     const { email } = createEmailDto;
-    const prevCode = await this.emailCodeRepository.findOneBy({ email });
-
-    if (prevCode) {
-      await this.emailCodeRepository.softDelete({ id: prevCode.id });
-    }
     await this.checkExistUser(email);
-
-    const code = codeGenerator();
-    await this.emailService.sendCode(email, code);
-    const emailCode = this.emailCodeRepository.create({
-      code,
-      email,
-    });
-    await this.emailCodeRepository.save(emailCode);
   }
 
   async registerFinal(createUserDto: CreateUserFinalDto) {
-    const { email, code, password } = createUserDto;
+    const { email, password } = createUserDto;
 
     await this.checkExistUser(email);
-
-    const emailCode = await this.emailCodeRepository.findOneBy({ email });
-    if (emailCode?.code !== code) {
-      throw new BadRequestException('Invalid code');
-    }
-
-    await this.emailCodeRepository.softRemove(emailCode);
 
     const hashPass = await this.cryptService.createHash(password);
     const user = await this.usersService.create({
